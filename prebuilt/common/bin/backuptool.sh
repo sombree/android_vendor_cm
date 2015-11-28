@@ -5,7 +5,7 @@
 
 export C=/tmp/backupdir
 export S=/system
-export V=12.1
+export V=13.0
 
 # Scripts in /system/addon.d expect to find backuptool.functions in /tmp
 cp -f /tmp/install/bin/backuptool.functions /tmp
@@ -45,7 +45,7 @@ check_blacklist() {
       ## Discard any known bad backup scripts
       cd /$1/addon.d/
       for f in *sh; do
-          s=$(md5sum $f | awk {'print $1'})
+          s=$(md5sum $f | cut -c-32)
           grep -q $s /system/addon.d/blacklist && rm -f $f
       done
   fi
@@ -57,7 +57,7 @@ check_whitelist() {
       ## forcefully keep any version-independent stuff
       cd /$1/addon.d/
       for f in *sh; do
-          s=$(md5sum $f | awk {'print $1'})
+          s=$(md5sum $f | cut -c-32)
           grep -q $s /system/addon.d/whitelist
           if [ $? -eq 0 ]; then
               found=1
